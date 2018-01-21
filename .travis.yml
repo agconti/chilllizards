@@ -1,30 +1,25 @@
 sudo: required
 language: python
 services:
-  - docker
+- docker
 python:
-  - "3.6"
+- '3.6'
 before_script:
-  - docker-compose build
+- docker-compose build
 script:
-  - docker-compose run --rm web bash -c "flake8 . &&
-                                         python wait_for_postgres.py &&
-                                         ./manage.py test"
-
+- docker-compose run --rm web bash -c "flake8 . && python wait_for_postgres.py &&
+  ./manage.py test"
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login --username=_ --password="$HEROKU_AUTH_TOKEN" registry.heroku.com;
-    docker tag web registry.heroku.com/liz-prod/web;
-    docker push registry.heroku.com/liz-prod/web;
-    fi
-  - if [ "$TRAVIS_BRANCH" == "qa" ]; then
-    docker login --username=_ --password="$HEROKU_AUTH_TOKEN" registry.heroku.com;
-    docker tag web registry.heroku.com/liz-qa/web;
-    docker push registry.heroku.com/liz-qa/web;
-    fi
-
+- if [ "$TRAVIS_BRANCH" == "master" ]; then docker login --username=_ --password="$HEROKU_AUTH_TOKEN"
+  registry.heroku.com; docker tag web registry.heroku.com/liz-prod/web; docker push
+  registry.heroku.com/liz-prod/web; fi
+- if [ "$TRAVIS_BRANCH" == "qa" ]; then docker login --username=_ --password="$HEROKU_AUTH_TOKEN"
+  registry.heroku.com; docker tag web registry.heroku.com/liz-qa/web; docker push
+  registry.heroku.com/liz-qa/web; fi
 notifications:
   email: false
-
 cache:
   pip: true
+env:
+  global:
+    secure: NRmdcN8TgXmpicUWBBd5C3NLLxWSvMq0Tsk9EmP3LBIi/gQbxe2UZrRGlV4Jabwagepp4YpfgrG/66CSpw8uuBlJSC89AQFwo/2JjWO5njQUwBecy5vAA3kcqV4SRw4Mf5MAL5ZQtF84gk1CIKK48w8H8UgH2KuGl4xrqyFOuBpiiKcvTNohMLgTJIh3H3ydiEL/+ubJNnHxOSzlY2pFniYHPIQStSVxotix/21QfaGIgSz8CcccMhmTa01iDpxkp1/nf1+75Zv13MnRuXwJjKBKjZVAc+ZW3n81pfaSb/RHZ27PPTavSxwANpXmsh4gDDe2Gd0HxXA+5w5x8v0gBQYWFjO0w78mwSQezO2l0m/BJp44cqS8H/F+vrk4nhOEEQbV2JOKn4qp0jzCTVJ5oSntkzYIXmD11NC6txV73fm8IkqhnVqQrAlCICLy+L5X8PLQPvptKUxTPIc5N+NvYAW4kaABx9ELF05XaxuH1a4LtF7K5hWhCLxADufEfwdMpNzipfU0PQU4+InojFdJAunaPYBKwogemHMuVeVm/XsivRhCGCUIEPzLusHtaKXOJTBk2cZIqxmKQ3CpQ8rs+P2qryp6rgwOa9p2dQi+4rPV6pvUQgqomPZGI05BO2WZtrcSvqt9Mo4/DuSYyKfKxRc91aQZ2WrVF7Sk9PATlpU=
