@@ -12,6 +12,5 @@ WORKDIR /code
 EXPOSE 8000
 
 # Migrates the database, uploads staticfiles, and runs the production server
-CMD ./manage.py migrate && \
-    ./manage.py collectstatic --noinput && \
+  CMD ./manage.py migrate && \
     newrelic-admin run-program gunicorn --bind 0.0.0.0:$PORT --access-logfile - liz.wsgi:application
